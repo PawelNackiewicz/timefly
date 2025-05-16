@@ -1,0 +1,11 @@
+---
+import '@/styles/globals.css'
+import Layout from '../layouts/Layout.astro';
+import ClockInOut from '@/components/employee/ClockInOut';
+---
+
+<Layout title="TimeTrack - Clock In/Out">
+	<main class="min-h-screen bg-slate-50 dark:bg-slate-900">
+		<ClockInOut client:load />
+	</main>
+</Layout>

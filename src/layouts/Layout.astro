@@ -1,0 +1,148 @@
+---
+import { ViewVerticalIcon } from '@radix-ui/react-icons';
+import { ClockIcon, LayoutDashboardIcon, UsersIcon, BarChartIcon } from 'lucide-react';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+const pathname = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="TimeTrack - Employee Work Hours Management System" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<div class="flex min-h-screen flex-col">
+			<header class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+				<div class="container flex h-14 max-w-screen-2xl items-center">
+					<div class="mr-4 hidden md:flex">
+						<a href="/" class="mr-6 flex items-center space-x-2">
+							<ClockIcon class="h-6 w-6" />
+							<span class="hidden font-bold sm:inline-block">
+								TimeTrack
+							</span>
+						</a>
+						<nav class="flex items-center gap-6 text-sm">
+							<a
+								href="/"
+								class={`transition-colors hover:text-foreground/80 ${pathname === "/" ? "text-foreground font-medium" : "text-foreground/60"}`}
+							>
+								Dashboard
+							</a>
+							<a
+								href="/admin/employees"
+								class={`transition-colors hover:text-foreground/80 ${pathname.startsWith("/admin/employees") ? "text-foreground font-medium" : "text-foreground/60"}`}
+							>
+								Employees
+							</a>
+							<a
+								href="/admin/reports"
+								class={`transition-colors hover:text-foreground/80 ${pathname.startsWith("/admin/reports") ? "text-foreground font-medium" : "text-foreground/60"}`}
+							>
+								Reports
+							</a>
+							<a
+								href="/clock"
+								class={`transition-colors hover:text-foreground/80 ${pathname === "/clock" ? "text-foreground font-medium" : "text-foreground/60"}`}
+							>
+								Clock In/Out
+							</a>
+						</nav>
+					</div>
+					<button
+						class="inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-4 py-2 mr-1 text-sm md:hidden"
+						data-mobile-menu
+					>
+						<ViewVerticalIcon class="h-5 w-5" />
+						<span class="sr-only">Toggle Menu</span>
+					</button>
+					<div class="flex w-full items-center justify-between md:justify-end">
+						<div class="md:hidden flex items-center">
+							<a href="/" class="flex items-center space-x-2">
+								<ClockIcon class="h-6 w-6" />
+								<span class="font-bold">TimeTrack</span>
+							</a>
+						</div>
+						<div class="flex items-center justify-end gap-2">
+							<button class="inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-ring disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-4 py-2 text-sm">
+								Admin
+							</button>
+						</div>
+					</div>
+				</div>
+			</header>
+
+			<div id="mobile-menu" class="fixed inset-0 z-50 hidden flex-col bg-background shadow-lg animate-in gap-4 md:hidden">
+				<div class="flex h-14 items-center border-b px-4">
+					<a href="/" class="flex items-center gap-2">
+						<ClockIcon class="h-6 w-6" />
+						<span class="font-bold">TimeTrack</span>
+					</a>
+					<button data-close-mobile-menu class="ml-auto">
+						<span class="sr-only">Close</span>
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+							<path d="M18 6 6 18"></path>
+							<path d="m6 6 12 12"></path>
+						</svg>
+					</button>
+				</div>
+				<nav class="grid gap-2 p-4 text-lg font-medium">
+					<a 
+						href="/" 
+						class={`flex items-center gap-2 rounded-md px-3 py-2 ${pathname === "/" ? "bg-accent" : "hover:bg-accent"}`}
+					>
+						<LayoutDashboardIcon class="h-5 w-5" />
+						Dashboard
+					</a>
+					<a 
+						href="/admin/employees" 
+						class={`flex items-center gap-2 rounded-md px-3 py-2 ${pathname.startsWith("/admin/employees") ? "bg-accent" : "hover:bg-accent"}`}
+					>
+						<UsersIcon class="h-5 w-5" />
+						Employees
+					</a>
+					<a 
+						href="/admin/reports" 
+						class={`flex items-center gap-2 rounded-md px-3 py-2 ${pathname.startsWith("/admin/reports") ? "bg-accent" : "hover:bg-accent"}`}
+					>
+						<BarChartIcon class="h-5 w-5" />
+						Reports
+					</a>
+					<a 
+						href="/clock" 
+						class={`flex items-center gap-2 rounded-md px-3 py-2 ${pathname === "/clock" ? "bg-accent" : "hover:bg-accent"}`}
+					>
+						<ClockIcon class="h-5 w-5" />
+						Clock In/Out
+					</a>
+				</nav>
+			</div>
+
+			<slot />
+		</div>
+
+		<script>
+			// Mobile menu toggle
+			const mobileMenu = document.getElementById('mobile-menu');
+			const mobileMenuButton = document.querySelector('[data-mobile-menu]');
+			const closeMobileMenuButton = document.querySelector('[data-close-mobile-menu]');
+
+			mobileMenuButton?.addEventListener('click', () => {
+				mobileMenu?.classList.remove('hidden');
+			});
+
+			closeMobileMenuButton?.addEventListener('click', () => {
+				mobileMenu?.classList.add('hidden');
+			});
+		</script>
+	</body>
+</html>
