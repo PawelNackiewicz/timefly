@@ -1,48 +1,72 @@
-# Astro Starter Kit: Basics
+# TimeFly
 
-```sh
-npm create astro@latest -- --template basics
-```
+## Project Description
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+TimeFly is a time tracking application that simplifies the process of recording work hours through a check-in/check-out mechanism with PIN verification. It aims to automate time registration for employees while providing administrators with the ability to manually intervene when necessary, thus reducing administrative overhead and improving accuracy.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Tech Stack
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+- **Frontend**:
+  - Astro - Modern static site builder with React integration
+  - React - JavaScript library for building user interfaces
+  - Tailwind CSS - Utility-first CSS framework for rapid UI development
+  - shadcn/ui - High-quality, accessible UI components built on Radix UI and Tailwind
+- **Backend & Database**:
+  - Supabase - Open source Firebase alternative providing authentication, PostgreSQL database, and real-time subscriptions
+  - PostgreSQL - Advanced open-source relational database
+- **Testing**:
+  - Playwright - End-to-end testing framework (to be implemented post-MVP)
+- **Deployment**:
+  - Vercel - Platform for frontend deployment, optimized for Astro
 
-## 🚀 Project Structure
+## Getting Started Locally
 
-Inside of your Astro project, you'll see the following folders and files:
+To get started with TimeFly locally, follow these steps:
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+1. Clone the repository:
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+   ```bash
+   git clone https://github.com/yourusername/timefly.git
+   cd timefly
+   ```
 
-## 🧞 Commands
+2. Install dependencies:
 
-All commands are run from the root of the project, from a terminal:
+   ```bash
+   npm install
+   ```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+3. Start the development server:
 
-## 👀 Want to learn more?
+   ```bash
+   npm run dev
+   ```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+4. Open your browser and navigate to `http://localhost:3000`.
+
+## Available Scripts
+
+- `dev`: Starts the development server.
+- `start`: Alias for `dev`.
+- `build`: Builds the application for production.
+- `preview`: Previews the production build.
+
+## Project Scope
+
+The initial version of TimeFly (MVP) includes:
+
+- Automated check-in/check-out process with PIN verification.
+- Manual intervention capabilities for administrators.
+- A responsive web interface optimized for mobile devices.
+- Employee list with search and filter functionality.
+- An admin panel displaying key performance indicators (KPIs).
+
+Advanced security features and integrations with other systems are not included in the MVP.
+
+## Project Status
+
+The project is currently in the MVP development phase, focusing on core functionalities.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
