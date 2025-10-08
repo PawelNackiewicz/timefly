@@ -1,0 +1,12 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+### Backend and database
+
+- Use supabase for backend services, including authentication adn database interactions.
+- Follow Supabase quidelines for security and perfomance
+- Use Zod schmas to validate data exchanged with the backend.
+- Use supabase from context.locals in Astro routes instead of importing supabaseClient directly
