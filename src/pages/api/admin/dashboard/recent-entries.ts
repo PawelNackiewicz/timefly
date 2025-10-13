@@ -44,16 +44,16 @@ import { handleError } from "@/lib/utils/error-handler";
  */
 export const GET: APIRoute = async (context) => {
   try {
-    // Authenticate admin
-    await requireAdmin(context);
+    // Authenticate admin and get authenticated client
+    const { supabase: authSupabase } = await requireAdmin(context);
 
     // Parse and validate query parameters
     const url = new URL(context.request.url);
     const queryParams = Object.fromEntries(url.searchParams);
     const { limit } = recentEntriesQuerySchema.parse(queryParams);
 
-    // Execute business logic
-    const service = new DashboardService(context.locals.supabase);
+    // Execute business logic with authenticated client
+    const service = new DashboardService(authSupabase);
     const entries = await service.getRecentEntries(limit);
 
     // Format response

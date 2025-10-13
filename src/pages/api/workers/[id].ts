@@ -29,14 +29,14 @@ import { handleError } from "@/lib/utils/error-handler";
  */
 export const GET: APIRoute = async (context) => {
   try {
-    // Authenticate admin
-    await requireAdmin(context);
+    // Authenticate admin and get authenticated client
+    const { supabase: authSupabase } = await requireAdmin(context);
 
     // Validate path parameter
     const { id } = workerIdParamSchema.parse({ id: context.params.id });
 
-    // Execute business logic
-    const workerService = new WorkerService(context.locals.supabase);
+    // Execute business logic with authenticated client
+    const workerService = new WorkerService(authSupabase);
     const worker = await workerService.getWorkerById(id);
 
     // Format response
@@ -74,8 +74,8 @@ export const GET: APIRoute = async (context) => {
  */
 export const PATCH: APIRoute = async (context) => {
   try {
-    // Authenticate admin
-    await requireAdmin(context);
+    // Authenticate admin and get authenticated client
+    const { supabase: authSupabase } = await requireAdmin(context);
 
     // Validate path parameter
     const { id } = workerIdParamSchema.parse({ id: context.params.id });
@@ -86,8 +86,8 @@ export const PATCH: APIRoute = async (context) => {
       body
     ) as import("@/types").UpdateWorkerCommand;
 
-    // Execute business logic
-    const workerService = new WorkerService(context.locals.supabase);
+    // Execute business logic with authenticated client
+    const workerService = new WorkerService(authSupabase);
     const worker = await workerService.updateWorker(id, validatedData);
 
     // Format response
@@ -123,14 +123,14 @@ export const PATCH: APIRoute = async (context) => {
  */
 export const DELETE: APIRoute = async (context) => {
   try {
-    // Authenticate admin
-    await requireAdmin(context);
+    // Authenticate admin and get authenticated client
+    const { supabase: authSupabase } = await requireAdmin(context);
 
     // Validate path parameter
     const { id } = workerIdParamSchema.parse({ id: context.params.id });
 
-    // Execute business logic
-    const workerService = new WorkerService(context.locals.supabase);
+    // Execute business logic with authenticated client
+    const workerService = new WorkerService(authSupabase);
     await workerService.deactivateWorker(id);
 
     // Format response

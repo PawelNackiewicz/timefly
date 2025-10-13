@@ -34,16 +34,16 @@ import { handleError } from "@/lib/utils/error-handler";
  */
 export const GET: APIRoute = async (context) => {
   try {
-    // Authenticate admin
-    await requireAdmin(context);
+    // Authenticate admin and get authenticated client
+    const { supabase: authSupabase } = await requireAdmin(context);
 
     // Parse and validate query parameters
     const url = new URL(context.request.url);
     const queryParams = Object.fromEntries(url.searchParams);
     const validatedParams = listWorkersQuerySchema.parse(queryParams);
 
-    // Execute business logic
-    const workerService = new WorkerService(context.locals.supabase);
+    // Execute business logic with authenticated client
+    const workerService = new WorkerService(authSupabase);
     const result = await workerService.listWorkers(validatedParams);
 
     // Format response
@@ -91,8 +91,8 @@ export const GET: APIRoute = async (context) => {
  */
 export const POST: APIRoute = async (context) => {
   try {
-    // Authenticate admin
-    await requireAdmin(context);
+    // Authenticate admin and get authenticated client
+    const { supabase: authSupabase } = await requireAdmin(context);
 
     // Parse and validate request body
     const body = await context.request.json();
@@ -100,8 +100,8 @@ export const POST: APIRoute = async (context) => {
       body
     ) as import("@/types").CreateWorkerCommand;
 
-    // Execute business logic
-    const workerService = new WorkerService(context.locals.supabase);
+    // Execute business logic with authenticated client
+    const workerService = new WorkerService(authSupabase);
     const worker = await workerService.createWorker(validatedData);
 
     // Format response

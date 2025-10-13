@@ -33,8 +33,8 @@ import { handleError } from "@/lib/utils/error-handler";
  */
 export const PATCH: APIRoute = async (context) => {
   try {
-    // Authenticate admin
-    await requireAdmin(context);
+    // Authenticate admin and get authenticated client
+    const { supabase: authSupabase } = await requireAdmin(context);
 
     // Validate path parameter
     const { id } = workerIdParamSchema.parse({ id: context.params.id });
@@ -43,8 +43,8 @@ export const PATCH: APIRoute = async (context) => {
     const body = await context.request.json();
     const { new_pin } = updateWorkerPinSchema.parse(body);
 
-    // Execute business logic
-    const workerService = new WorkerService(context.locals.supabase);
+    // Execute business logic with authenticated client
+    const workerService = new WorkerService(authSupabase);
     await workerService.updateWorkerPin(id, new_pin);
 
     // Format response

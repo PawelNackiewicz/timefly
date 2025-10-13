@@ -30,16 +30,16 @@ import { handleError } from "@/lib/utils/error-handler";
  */
 export const GET: APIRoute = async (context) => {
   try {
-    // Authenticate admin
-    await requireAdmin(context);
+    // Authenticate admin and get authenticated client
+    const { supabase: authSupabase } = await requireAdmin(context);
 
     // Validate path parameter
     const { id } = timeRegistrationIdParamSchema.parse({
       id: context.params.id,
     });
 
-    // Execute business logic
-    const service = new TimeRegistrationService(context.locals.supabase);
+    // Execute business logic with authenticated client
+    const service = new TimeRegistrationService(authSupabase);
     const registration = await service.getTimeRegistrationById(id);
 
     // Format response
@@ -79,8 +79,8 @@ export const GET: APIRoute = async (context) => {
  */
 export const PATCH: APIRoute = async (context) => {
   try {
-    // Authenticate admin
-    const { admin } = await requireAdmin(context);
+    // Authenticate admin and get authenticated client
+    const { admin, supabase: authSupabase } = await requireAdmin(context);
 
     // Validate path parameter
     const { id } = timeRegistrationIdParamSchema.parse({
@@ -93,8 +93,8 @@ export const PATCH: APIRoute = async (context) => {
       body
     ) as import("@/types").UpdateTimeRegistrationCommand;
 
-    // Execute business logic
-    const service = new TimeRegistrationService(context.locals.supabase);
+    // Execute business logic with authenticated client
+    const service = new TimeRegistrationService(authSupabase);
     const registration = await service.updateTimeRegistration(
       id,
       validatedData,
@@ -136,16 +136,16 @@ export const PATCH: APIRoute = async (context) => {
  */
 export const DELETE: APIRoute = async (context) => {
   try {
-    // Authenticate admin
-    await requireAdmin(context);
+    // Authenticate admin and get authenticated client
+    const { supabase: authSupabase } = await requireAdmin(context);
 
     // Validate path parameter
     const { id } = timeRegistrationIdParamSchema.parse({
       id: context.params.id,
     });
 
-    // Execute business logic
-    const service = new TimeRegistrationService(context.locals.supabase);
+    // Execute business logic with authenticated client
+    const service = new TimeRegistrationService(authSupabase);
     await service.deleteTimeRegistration(id);
 
     // Format response

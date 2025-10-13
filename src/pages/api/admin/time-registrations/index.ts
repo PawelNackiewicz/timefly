@@ -36,16 +36,16 @@ import { handleError } from "@/lib/utils/error-handler";
  */
 export const GET: APIRoute = async (context) => {
   try {
-    // Authenticate admin
-    await requireAdmin(context);
+    // Authenticate admin and get authenticated client
+    const { supabase: authSupabase } = await requireAdmin(context);
 
     // Parse and validate query parameters
     const url = new URL(context.request.url);
     const queryParams = Object.fromEntries(url.searchParams);
     const validatedParams = listTimeRegistrationsQuerySchema.parse(queryParams);
 
-    // Execute business logic
-    const service = new TimeRegistrationService(context.locals.supabase);
+    // Execute business logic with authenticated client
+    const service = new TimeRegistrationService(authSupabase);
     const result = await service.listTimeRegistrations(validatedParams);
 
     // Format response
@@ -92,8 +92,8 @@ export const GET: APIRoute = async (context) => {
  */
 export const POST: APIRoute = async (context) => {
   try {
-    // Authenticate admin
-    const { admin } = await requireAdmin(context);
+    // Authenticate admin and get authenticated client
+    const { admin, supabase: authSupabase } = await requireAdmin(context);
 
     // Parse and validate request body
     const body = await context.request.json();
@@ -101,8 +101,8 @@ export const POST: APIRoute = async (context) => {
       body
     ) as import("@/types").CreateTimeRegistrationCommand;
 
-    // Execute business logic
-    const service = new TimeRegistrationService(context.locals.supabase);
+    // Execute business logic with authenticated client
+    const service = new TimeRegistrationService(authSupabase);
     const registration = await service.createTimeRegistration(
       validatedData,
       admin.id
