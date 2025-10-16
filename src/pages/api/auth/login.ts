@@ -14,8 +14,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     const supabase = createSupabaseServerClient(cookies);
 
-    console.log("🔐 Attempting login for:", email);
-
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -35,8 +33,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         }
       );
     }
-
-    console.log("✅ Login successful, checking admin status...");
 
     // Check if user is an admin
     const { data: admin, error: adminError } = await supabase
@@ -62,10 +58,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         }
       );
     }
-
-    console.log(
-      "✅ Admin verified, session cookies should be set by Supabase SSR"
-    );
 
     return new Response(
       JSON.stringify({

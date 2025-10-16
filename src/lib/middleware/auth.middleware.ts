@@ -13,7 +13,8 @@ import { API_ERROR_CODES } from "@/types";
 /**
  * Require admin authentication for protected routes
  *
- * Validates JWT token from Authorization header and verifies user is an admin
+ * Validates authentication via session cookies (primary) or Authorization header (fallback)
+ * and verifies user is an admin
  *
  * @param context - Astro API context with Supabase client
  * @returns Object containing authenticated user and admin profile
@@ -30,7 +31,32 @@ import { API_ERROR_CODES } from "@/types";
  * };
  */
 export async function requireAdmin(context: APIContext) {
-  // Extract Authorization header
+  // Try to get user from session (cookie-based auth) first
+  const session = context.locals.session;
+
+  if (session?.user) {
+    // User is authenticated via session cookies
+    const user = session.user;
+
+    // Verify user is an admin using the server Supabase client
+    const { data: admin, error: adminError } = await context.locals.supabase
+      .from("admins")
+      .select("*")
+      .eq("user_id", user.id)
+      .single();
+
+    if (adminError || !admin) {
+      throw new AppError(
+        API_ERROR_CODES.FORBIDDEN,
+        403,
+        "User is not an admin"
+      );
+    }
+
+    return { user, admin, supabase: context.locals.supabase };
+  }
+
+  // Fallback to Authorization header (for API clients without cookies)
   const authHeader = context.request.headers.get("Authorization");
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -44,7 +70,7 @@ export async function requireAdmin(context: APIContext) {
   // Extract JWT token
   const token = authHeader.replace("Bearer ", "");
 
-  // Verify token and get user from Supabase (using global client for auth check)
+  // Verify token and get user from Supabase
   const {
     data: { user },
     error,
@@ -78,9 +104,6 @@ export async function requireAdmin(context: APIContext) {
       },
     }
   );
-
-  // Set authenticated client in context.locals for use in routes/services
-  context.locals.authenticatedSupabase = authenticatedSupabase;
 
   // Verify user is an admin using authenticated client (RLS will work correctly)
   const { data: admin, error: adminError } = await authenticatedSupabase

@@ -13,8 +13,6 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
 
     const supabase = createSupabaseServerClient(cookies);
 
-    console.log("🔐 Sending password reset email for:", email);
-
     // Create the redirect URL for password reset
     const resetUrl = new URL("/reset-password", url.origin);
 
@@ -36,8 +34,6 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
         }
       );
     }
-
-    console.log("✅ Password reset email sent successfully");
 
     return new Response(
       JSON.stringify({

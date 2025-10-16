@@ -4,6 +4,7 @@
 
 - **Astro** - Modern static site builder with React integration
 - **React** - JavaScript library for building user interfaces
+- **TanStack Query (React Query)** - Powerful data synchronization and caching library for React
 - **Tailwind CSS** - Utility-first CSS framework for rapid UI development
 - **shadcn/ui** - High-quality, accessible UI components built on Radix UI and Tailwind
 
