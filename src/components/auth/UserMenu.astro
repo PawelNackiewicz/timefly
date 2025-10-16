@@ -1,0 +1,111 @@
+---
+import { Button } from "@/components/ui/button";
+import { LogOutIcon, UserIcon } from "lucide-react";
+
+const session = Astro.locals.session;
+const admin = Astro.locals.admin;
+
+const initials = admin
+  ? `${admin.first_name[0]}${admin.last_name[0]}`.toUpperCase()
+  : "";
+---
+
+{
+  !session || !admin ? (
+    <Button size="sm" variant="secondary" className="inline-flex">
+      <a href="/login">Login</a>
+    </Button>
+  ) : (
+    <div class="relative" data-user-menu>
+      <button
+        type="button"
+        data-user-menu-trigger
+        class="relative inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground font-medium hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
+        {initials}
+      </button>
+
+      <div
+        data-user-menu-content
+        class="hidden absolute right-0 mt-2 w-56 rounded-md border bg-popover p-1 shadow-md z-50"
+      >
+        <div class="px-2 py-1.5">
+          <div class="flex flex-col space-y-1">
+            <p class="text-sm font-medium leading-none">
+              {admin.first_name} {admin.last_name}
+            </p>
+            <p class="text-xs leading-none text-muted-foreground">
+              {session.user.email}
+            </p>
+            {admin.department && (
+              <p class="text-xs leading-none text-muted-foreground">
+                {admin.department}
+              </p>
+            )}
+          </div>
+        </div>
+        <div class="h-px bg-border my-1" />
+        <button
+          type="button"
+          disabled
+          class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none opacity-50 pointer-events-none"
+        >
+          <UserIcon className="mr-2 h-4 w-4" />
+          <span>Profile</span>
+        </button>
+        <div class="h-px bg-border my-1" />
+        <button
+          type="button"
+          data-logout-button
+          class="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none text-red-600 hover:bg-accent focus:bg-accent transition-colors"
+        >
+          <LogOutIcon className="mr-2 h-4 w-4" />
+          <span>Log out</span>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  // Toggle dropdown menu
+  function setupUserMenu() {
+    const menuContainer = document.querySelector("[data-user-menu]");
+    const trigger = document.querySelector("[data-user-menu-trigger]");
+    const content = document.querySelector("[data-user-menu-content]");
+    const logoutButton = document.querySelector("[data-logout-button]");
+
+    if (!menuContainer || !trigger || !content) return;
+
+    // Toggle menu
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      content.classList.toggle("hidden");
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!menuContainer.contains(e.target as Node)) {
+        content.classList.add("hidden");
+      }
+    });
+
+    // Handle logout
+    logoutButton?.addEventListener("click", async () => {
+      try {
+        await fetch("/api/auth/logout", {
+          method: "POST",
+        });
+        window.location.href = "/login";
+      } catch (error) {
+        console.error("Error logging out:", error);
+      }
+    });
+  }
+
+  // Setup on page load
+  setupUserMenu();
+
+  // Setup after view transitions
+  document.addEventListener("astro:after-swap", setupUserMenu);
+</script>

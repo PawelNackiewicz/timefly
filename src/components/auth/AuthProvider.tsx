@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import type { Database } from "@/db/database.types";
 
@@ -11,6 +11,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshAuth: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -56,8 +57,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error(data.error || "Login failed");
       }
 
-      setUser(data.user);
-      setAdmin(data.admin);
+      // Session cookies are set by the API
+      // State will be set by refreshAuth() after page reload
+      // Don't set state here - let server-side middleware handle it
     } finally {
       setLoading(false);
     }
@@ -82,9 +84,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const resetPassword = async (email: string) => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send password reset email");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, admin, loading, login, logout, refreshAuth }}
+      value={{
+        user,
+        admin,
+        loading,
+        login,
+        logout,
+        refreshAuth,
+        resetPassword,
+      }}
     >
       {children}
     </AuthContext.Provider>

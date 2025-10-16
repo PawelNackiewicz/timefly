@@ -11,31 +11,42 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ClockIcon, AlertCircleIcon } from "lucide-react";
+import {
+  MailIcon,
+  AlertCircleIcon,
+  CheckCircleIcon,
+  ArrowLeftIcon,
+} from "lucide-react";
 
-export function LoginForm() {
+export function ResetPasswordForm() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  const { login, loading } = useAuth();
+  const [success, setSuccess] = useState(false);
+  const { resetPassword, loading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccess(false);
 
-    if (!email || !password) {
-      setError("Please enter both email and password");
+    if (!email) {
+      setError("Please enter your email address");
       return;
     }
 
     try {
-      await login(email, password);
-      // MUST do full page reload to trigger middleware with new session cookies
-      window.location.href = "/dashboard";
+      await resetPassword(email);
+      setSuccess(true);
+      setEmail("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(
+        err instanceof Error ? err.message : "Failed to send reset email"
+      );
     }
+  };
+
+  const handleBackToLogin = () => {
+    window.location.href = "/login";
   };
 
   return (
@@ -43,15 +54,21 @@ export function LoginForm() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
+            <button
+              onClick={handleBackToLogin}
+              className="absolute left-4 top-4 p-2 hover:bg-muted rounded-md transition-colors"
+              type="button"
+            >
+              <ArrowLeftIcon className="h-4 w-4" />
+            </button>
             <div className="rounded-full bg-primary p-3">
-              <ClockIcon className="h-8 w-8 text-primary-foreground" />
+              <MailIcon className="h-8 w-8 text-primary-foreground" />
             </div>
           </div>
-          <CardTitle className="text-2xl text-center">
-            Welcome to TimeTrack
-          </CardTitle>
+          <CardTitle className="text-2xl text-center">Reset Password</CardTitle>
           <CardDescription className="text-center">
-            Sign in to your admin account to continue
+            Enter your email address and we'll send you a link to reset your
+            password.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -63,50 +80,47 @@ export function LoginForm() {
               </Alert>
             )}
 
+            {success && (
+              <Alert>
+                <CheckCircleIcon className="h-4 w-4" />
+                <AlertDescription>
+                  Password reset email sent successfully! Please check your
+                  inbox and click the link to reset your password.
+                </AlertDescription>
+              </Alert>
+            )}
+
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="reset-email">Email</Label>
               <Input
-                id="email"
+                id="reset-email"
                 type="email"
                 placeholder="admin@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
+                disabled={loading || success}
                 required
                 autoComplete="email"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-                required
-                autoComplete="current-password"
-              />
-            </div>
-
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Signing in..." : "Sign in"}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading || success}
+            >
+              {loading ? "Sending..." : "Send Reset Link"}
             </Button>
           </form>
 
           <div className="mt-4 text-center">
-            <a
-              href="/reset-password"
+            <button
+              type="button"
+              onClick={handleBackToLogin}
               className="text-sm text-muted-foreground hover:text-primary underline"
             >
-              Forgot password?
-            </a>
-          </div>
-
-          <div className="mt-4 text-center text-sm text-muted-foreground">
-            <p>Admin access only</p>
+              Back to Login
+            </button>
           </div>
         </CardContent>
       </Card>

@@ -3,7 +3,7 @@
  * Uses cookies for session management in SSR context
  */
 
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import type { AstroCookies } from "astro";
 import type { Database } from "./database.types";
 
@@ -17,16 +17,35 @@ export function createSupabaseServerClient(cookies: AstroCookies) {
     {
       cookies: {
         getAll() {
-          // Return empty array - Supabase will use get() fallback
+          console.log("🍪 [getAll] called");
+          // Return empty array - Supabase SSR will use get() for individual cookies
           return [];
         },
         setAll(cookiesToSet) {
+          console.log(
+            "🍪 [setAll] called with",
+            cookiesToSet.length,
+            "cookies"
+          );
           cookiesToSet.forEach(({ name, value, options }) => {
+            console.log(`  → Setting cookie: ${name}`);
             cookies.set(name, value, options);
           });
         },
         get(name) {
-          return cookies.get(name)?.value;
+          const value = cookies.get(name)?.value;
+          if (value) {
+            console.log(`🍪 [get] "${name}" → ✓ found`);
+          }
+          return value;
+        },
+        set(name, value, options) {
+          console.log(`🍪 [set] "${name}" → setting cookie`);
+          cookies.set(name, value, options);
+        },
+        remove(name, options) {
+          console.log(`🍪 [remove] "${name}" → removing cookie`);
+          cookies.delete(name, options);
         },
       },
     }

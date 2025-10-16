@@ -17,11 +17,11 @@ export function requireAuth(Astro: AstroGlobal) {
 
 /**
  * Require guest (redirect authenticated users away)
- * Redirects to / if user is already authenticated
+ * Redirects to /dashboard if user is already authenticated
  */
 export function requireGuest(Astro: AstroGlobal) {
   if (Astro.locals.session && Astro.locals.admin) {
-    return Astro.redirect("/");
+    return Astro.redirect("/dashboard");
   }
   return null;
 }
