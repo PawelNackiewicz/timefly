@@ -19,7 +19,17 @@ import {
 export const listWorkersQuerySchema = z.object({
   search: z.string().max(200).optional(),
   department: z.string().max(100).optional(),
-  is_active: z.coerce.boolean().optional(),
+  is_active: z
+    .union([z.boolean(), z.string()])
+    .optional()
+    .transform((val) => {
+      if (val === undefined) return undefined;
+      if (typeof val === "boolean") return val;
+      // Handle string values
+      if (val === "true" || val === "1") return true;
+      if (val === "false" || val === "0") return false;
+      return Boolean(val);
+    }),
   ...paginationSchema.shape,
   sort_by: z.enum(["first_name", "last_name", "created_at"]).optional(),
   sort_order: sortOrderSchema,

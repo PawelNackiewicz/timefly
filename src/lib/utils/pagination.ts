@@ -26,11 +26,11 @@ export interface PaginationParams {
  */
 export function parsePaginationParams(params: PaginationParams) {
   // Ensure page is at least 1
-  const page = Math.max(1, params.page || PAGINATION_DEFAULTS.PAGE);
+  const page = Math.max(1, params.page ?? PAGINATION_DEFAULTS.PAGE);
 
   // Ensure limit is between 1 and MAX_LIMIT
   const limit = Math.min(
-    Math.max(1, params.limit || PAGINATION_DEFAULTS.LIMIT),
+    Math.max(1, params.limit ?? PAGINATION_DEFAULTS.LIMIT),
     PAGINATION_DEFAULTS.MAX_LIMIT
   );
 

@@ -1,0 +1,37 @@
+[
+    {
+        "first_name": "Jan",
+        "last_name": "Kowalski",
+        "pin": "1111",
+        "department": "IT",
+        "is_active": true
+    },
+    {
+        "first_name": "Anna",
+        "last_name": "Nowak",
+        "pin": "2222",
+        "department": "HR",
+        "is_active": true
+    },
+    {
+        "first_name": "Piotr",
+        "last_name": "Wiśniewski",
+        "pin": "3333",
+        "department": "IT",
+        "is_active": true
+    },
+    {
+        "first_name": "Maria",
+        "last_name": "Kowalczyk",
+        "pin": "4444",
+        "department": "Sales",
+        "is_active": false
+    },
+    {
+        "first_name": "Tomasz",
+        "last_name": "Lewandowski",
+        "pin": "5555",
+        "department": "IT",
+        "is_active": true
+    }
+]

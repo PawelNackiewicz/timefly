@@ -37,8 +37,8 @@ export const sortOrderSchema = z.enum(["asc", "desc"]).optional();
 
 /**
  * ISO 8601 date string validation schema
- * Validates datetime format with timezone
+ * Validates datetime format with timezone (including UTC 'Z' and offsets like '+01:00')
  */
 export const isoDateSchema = z
   .string()
-  .datetime("Invalid ISO 8601 date format");
+  .datetime({ offset: true, message: "Invalid ISO 8601 date format" });
