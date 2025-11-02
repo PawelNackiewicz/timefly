@@ -155,7 +155,7 @@ The Playwright configuration is in `playwright.config.ts` at the project root.
 Key settings:
 
 - **Environment**: Loads variables from `.env.test`
-- **Browser**: Chromium, Firefox, and WebKit (can run all or select specific ones)
+- **Browser**: Chromium
 - **Base URL**: `http://localhost:4321` (Astro dev server)
 - **Web Server**: Automatically starts `pnpm dev` before tests
 - **Server Reuse**: Reuses existing server in local dev (not in CI)

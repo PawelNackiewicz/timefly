@@ -239,7 +239,7 @@ Kluczowe założenia:
 - Wszystkie główne user journeys działają
 - Testy stabilne (< 5% flakiness)
 - Czas wykonania pełnego suite < 10 minut
-- Testy na Chrome, Firefox, Safari (WebKit)
+- Testy tylko na Chrome
 
 ### 3.4 Testy wydajnościowe (Performance Tests)
 
@@ -996,12 +996,7 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
-  projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "firefox", use: { ...devices["Desktop Firefox"] } },
-    { name: "webkit", use: { ...devices["Desktop Safari"] } },
-    { name: "mobile", use: { ...devices["iPhone 13"] } },
-  ],
+  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
 });
 ```
 
@@ -1317,7 +1312,7 @@ jobs:
 #### Testy E2E
 
 - [x] **Critical paths**: 100% głównych user journeys
-- [x] **Cross-browser**: Testy na Chrome, Firefox, Safari
+- [x] **Cross-browser**: Testy na Chrome
 - [x] **Mobile**: Testy na urządzeniach mobilnych (viewport)
 - [x] **Stability**: < 5% flakiness rate
 - [x] **Pass rate**: 95% testów przechodzi (5% buffer na flaky)
