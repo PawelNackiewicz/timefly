@@ -31,6 +31,9 @@ export class TimeRegistrationService {
    * - If no active registration exists → Check-in (create new registration)
    * - If active registration exists → Check-out (update with check_out time)
    *
+   * Note: Multiple workers can share the same PIN. If multiple workers have the same PIN,
+   * the first matching worker found in the database will be used for the registration.
+   *
    * @param pin - Worker's 4-6 digit PIN
    * @returns Action taken (check_in/check_out), registration data, and worker info
    * @throws AppError if PIN is invalid, worker inactive, or database error
@@ -49,6 +52,7 @@ export class TimeRegistrationService {
     }
 
     // Verify PIN against all worker hashes
+    // If multiple workers have the same PIN, the first match will be used
     let worker = null;
     for (const w of workers) {
       if (await verifyPin(pin, w.pin_hash)) {

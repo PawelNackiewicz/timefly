@@ -298,7 +298,7 @@ const EmployeeManagementContent = () => {
       setIsAddDialogOpen(false);
     },
     onError: (error: Error) => {
-      toast.error(error.message);
+      toast.error(error.message || "Failed to add employee. Please try again.");
     },
   });
 

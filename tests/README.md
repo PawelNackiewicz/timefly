@@ -238,8 +238,8 @@ describe("WorkerService", () => {
       // test implementation
     });
 
-    it("should throw error when PIN already exists", async () => {
-      // test implementation
+    it("should allow creating workers with the same PIN", async () => {
+      // test implementation - multiple workers can share PINs
     });
   });
 });

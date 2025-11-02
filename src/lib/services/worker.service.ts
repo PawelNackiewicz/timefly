@@ -142,32 +142,13 @@ export class WorkerService {
    *
    * @param command - Worker creation data with plain-text PIN
    * @returns Created worker (without PIN hash)
-   * @throws AppError if PIN already exists
    */
   async createWorker(command: CreateWorkerCommand): Promise<WorkerDTO> {
     // Hash the PIN
     const pinHash = await hashPin(command.pin);
 
-    // Check if PIN already exists (bcrypt hashes are unique per salt, so we need to check all)
-    // Note: In production, consider implementing a unique constraint on a deterministic hash
-    const { data: existingWorkers } = await this.supabase
-      .from("workers")
-      .select("id, pin_hash");
-
-    if (existingWorkers) {
-      for (const existingWorker of existingWorkers) {
-        const { verifyPin } = await import("../utils/password");
-        if (await verifyPin(command.pin, existingWorker.pin_hash)) {
-          throw new AppError(
-            API_ERROR_CODES.CONFLICT,
-            409,
-            "PIN already exists"
-          );
-        }
-      }
-    }
-
     // Create worker
+    // Note: Multiple workers can share the same PIN
     const { data, error } = await this.supabase
       .from("workers")
       .insert({
@@ -230,7 +211,7 @@ export class WorkerService {
    *
    * @param id - Worker UUID
    * @param newPin - New plain-text PIN
-   * @throws AppError if worker not found or PIN already in use
+   * @throws AppError if worker not found
    */
   async updateWorkerPin(id: string, newPin: string): Promise<void> {
     // Check if worker exists
@@ -245,26 +226,8 @@ export class WorkerService {
     }
 
     // Hash new PIN
+    // Note: Multiple workers can share the same PIN
     const pinHash = await hashPin(newPin);
-
-    // Check if new PIN already exists (for different worker)
-    const { data: allWorkers } = await this.supabase
-      .from("workers")
-      .select("id, pin_hash")
-      .neq("id", id);
-
-    if (allWorkers) {
-      const { verifyPin } = await import("../utils/password");
-      for (const worker of allWorkers) {
-        if (await verifyPin(newPin, worker.pin_hash)) {
-          throw new AppError(
-            API_ERROR_CODES.CONFLICT,
-            409,
-            "PIN already in use"
-          );
-        }
-      }
-    }
 
     // Update PIN
     const { error } = await this.supabase

@@ -254,10 +254,6 @@ describe("WorkerService Integration Tests", () => {
       mockSupabase.from.mockImplementation((table: string) => {
         if (table === "workers") {
           return {
-            select: vi.fn().mockResolvedValue({
-              data: [], // No existing workers
-              error: null,
-            }),
             insert: vi.fn().mockReturnValue({
               select: vi.fn().mockReturnValue({
                 single: vi.fn().mockResolvedValue({
@@ -286,26 +282,36 @@ describe("WorkerService Integration Tests", () => {
       expect(result).not.toHaveProperty("pin");
     });
 
-    it("should throw error when PIN already exists", async () => {
-      const existingWorker = {
-        id: "1",
-        pin_hash: "hashed_1234",
+    it("should allow creating workers with the same PIN", async () => {
+      const newWorker = {
+        first_name: "Test",
+        last_name: "Worker",
+        pin: "1234",
       };
 
       mockSupabase.from.mockReturnValue({
-        select: vi.fn().mockResolvedValue({
-          data: [existingWorker],
-          error: null,
+        insert: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnValue({
+            single: vi.fn().mockResolvedValue({
+              data: {
+                id: "2",
+                first_name: newWorker.first_name,
+                last_name: newWorker.last_name,
+                pin_hash: "hashed_1234",
+                department: null,
+                is_active: true,
+                created_at: "2025-01-01T00:00:00Z",
+              },
+              error: null,
+            }),
+          }),
         }),
       });
 
-      await expect(
-        service.createWorker({
-          first_name: "Test",
-          last_name: "Worker",
-          pin: "1234",
-        })
-      ).rejects.toThrow("PIN already exists");
+      const result = await service.createWorker(newWorker);
+
+      expect(result.id).toBe("2");
+      expect(result).not.toHaveProperty("pin_hash");
     });
   });
 
@@ -377,10 +383,6 @@ describe("WorkerService Integration Tests", () => {
               error: null,
             }),
           }),
-          neq: vi.fn().mockResolvedValue({
-            data: [], // No other workers with same PIN
-            error: null,
-          }),
         }),
         update: vi.fn().mockReturnValue({
           eq: vi.fn().mockResolvedValue({
@@ -410,7 +412,7 @@ describe("WorkerService Integration Tests", () => {
       ).rejects.toThrow("Worker not found");
     });
 
-    it("should throw error when PIN already in use", async () => {
+    it("should allow updating PIN to a value already in use by another worker", async () => {
       mockSupabase.from.mockImplementation(() => ({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
@@ -419,16 +421,16 @@ describe("WorkerService Integration Tests", () => {
               error: null,
             }),
           }),
-          neq: vi.fn().mockResolvedValue({
-            data: [{ id: "2", pin_hash: "hashed_5678" }],
+        }),
+        update: vi.fn().mockReturnValue({
+          eq: vi.fn().mockResolvedValue({
+            data: null,
             error: null,
           }),
         }),
       }));
 
-      await expect(service.updateWorkerPin("1", "5678")).rejects.toThrow(
-        "PIN already in use"
-      );
+      await expect(service.updateWorkerPin("1", "5678")).resolves.not.toThrow();
     });
   });
 
