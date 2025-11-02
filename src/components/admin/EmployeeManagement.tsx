@@ -459,7 +459,10 @@ const EmployeeManagementContent = () => {
           <h1 className="text-3xl font-bold tracking-tight">
             Employee Management
           </h1>
-          <Button onClick={() => setIsAddDialogOpen(true)}>
+          <Button
+            onClick={() => setIsAddDialogOpen(true)}
+            data-testid="add-employee-button"
+          >
             <PlusIcon className="mr-2 h-4 w-4" />
             Add Employee
           </Button>
@@ -666,6 +669,7 @@ const EmployeeManagementContent = () => {
               <Label htmlFor="first_name">First Name</Label>
               <Input
                 id="first_name"
+                data-testid="employee-first-name"
                 value={newEmployee.first_name}
                 onChange={(e) =>
                   setNewEmployee({ ...newEmployee, first_name: e.target.value })
@@ -678,6 +682,7 @@ const EmployeeManagementContent = () => {
               <Label htmlFor="last_name">Last Name</Label>
               <Input
                 id="last_name"
+                data-testid="employee-last-name"
                 value={newEmployee.last_name}
                 onChange={(e) =>
                   setNewEmployee({ ...newEmployee, last_name: e.target.value })
@@ -690,6 +695,7 @@ const EmployeeManagementContent = () => {
               <Label htmlFor="pin">PIN Code (4-6 digits)</Label>
               <Input
                 id="pin"
+                data-testid="employee-pin"
                 value={newEmployee.pin}
                 onChange={(e) =>
                   setNewEmployee({
@@ -715,7 +721,10 @@ const EmployeeManagementContent = () => {
                 }
                 disabled={isSubmitting}
               >
-                <SelectTrigger id="department">
+                <SelectTrigger
+                  id="department"
+                  data-testid="employee-department"
+                >
                   <SelectValue placeholder="Select Department" />
                 </SelectTrigger>
                 <SelectContent>
@@ -732,6 +741,7 @@ const EmployeeManagementContent = () => {
               <Label htmlFor="status">Active Status</Label>
               <Switch
                 id="status"
+                data-testid="employee-status"
                 checked={newEmployee.is_active}
                 onCheckedChange={(checked) =>
                   setNewEmployee({ ...newEmployee, is_active: checked })
@@ -745,10 +755,15 @@ const EmployeeManagementContent = () => {
               variant="outline"
               onClick={() => setIsAddDialogOpen(false)}
               disabled={isSubmitting}
+              data-testid="cancel-add-employee"
             >
               Cancel
             </Button>
-            <Button onClick={handleAddEmployee} disabled={isSubmitting}>
+            <Button
+              onClick={handleAddEmployee}
+              disabled={isSubmitting}
+              data-testid="submit-add-employee"
+            >
               {isSubmitting && (
                 <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
               )}

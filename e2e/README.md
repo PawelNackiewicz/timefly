@@ -6,10 +6,40 @@ This directory contains end-to-end tests for the TimeTrack application using Pla
 
 ```
 e2e/
-├── page-objects/        # Page Object Models for better test maintainability
-│   └── login.page.ts   # Login page object
-└── login.spec.ts       # Login functionality tests
+├── page-objects/                    # Page Object Models for better test maintainability
+│   ├── login.page.ts               # Login page object
+│   └── employee-management.page.ts # Employee management page object
+├── login.spec.ts                   # Login functionality tests
+└── employee-management.spec.ts     # Employee management tests
 ```
+
+## Test Suites
+
+### Login Tests (`login.spec.ts`)
+
+Tests the login functionality including:
+
+- Display of login form elements
+- Successful login with valid credentials
+- Error handling for invalid credentials
+- Form validation for empty fields
+- Button state during login process
+- Navigation to password reset page
+
+### Employee Management Tests (`employee-management.spec.ts`)
+
+Tests the employee management functionality including:
+
+- Display of employee management page elements
+- Adding new employees with all fields
+- Adding new employees with only required fields
+- Form validation (first name, last name, PIN)
+- Duplicate PIN detection
+- Canceling add employee dialog
+- Button state during submission
+- Searching for employees
+- Adding employees with specific departments
+- Adding inactive employees
 
 ## Setup
 
