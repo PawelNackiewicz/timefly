@@ -4,13 +4,19 @@ import react from '@astrojs/react';
 
 import tailwind from '@astrojs/tailwind';
 
+import vercel from '@astrojs/vercel';
+
 // https://astro.build/config
 export default defineConfig({
-  output: 'server', // Enable SSR for API routes
+  // Enable SSR for API routes
+  output: 'server',
+
   integrations: [
     react(),
     tailwind({
       applyBaseStyles: false,
     }),
   ],
+
+  adapter: vercel(),
 });

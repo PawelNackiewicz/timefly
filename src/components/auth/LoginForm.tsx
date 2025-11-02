@@ -57,7 +57,7 @@ export function LoginForm() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <Alert variant="destructive">
+              <Alert variant="destructive" data-testid="error-alert">
                 <AlertCircleIcon className="h-4 w-4" />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
@@ -74,6 +74,7 @@ export function LoginForm() {
                 disabled={loading}
                 required
                 autoComplete="email"
+                data-testid="email-input"
               />
             </div>
 
@@ -88,10 +89,16 @@ export function LoginForm() {
                 disabled={loading}
                 required
                 autoComplete="current-password"
+                data-testid="password-input"
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading}
+              data-testid="submit-button"
+            >
               {loading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
