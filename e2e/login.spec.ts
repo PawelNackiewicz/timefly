@@ -27,7 +27,7 @@ test.describe("User Login", () => {
 
   test("should successfully login with valid credentials", async () => {
     // Arrange: Valid test credentials
-    const email = "ae2e-user@test.com";
+    const email = "e2e-user@test.com";
     const password = "e2euser";
 
     // Act: Perform login
