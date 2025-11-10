@@ -30,7 +30,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    baseURL: "http://prev-timefly.vercel.app",
+    baseURL: "http://localhost:4321",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
@@ -58,5 +58,10 @@ export default defineConfig({
     timeout: 120_000, // 2 minutes for server to start
     stdout: "ignore",
     stderr: "pipe",
+    env: {
+      SUPABASE_URL: process.env.SUPABASE_URL || "",
+      SUPABASE_KEY: process.env.SUPABASE_KEY || "",
+      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
+    },
   },
 });
