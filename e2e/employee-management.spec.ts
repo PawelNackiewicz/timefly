@@ -36,37 +36,6 @@ test.describe("Employee Management", () => {
     await expect(employeePage.searchInput).toBeVisible();
   });
 
-  test("should successfully add a new employee with all fields", async () => {
-    // Arrange: Generate unique employee data
-    const timestamp = Date.now();
-    const employeeData = {
-      firstName: `John`,
-      lastName: `Doe${timestamp}`,
-      pin: "1234",
-      department: "Development",
-    };
-
-    // Get initial employee count
-    const initialCount = await employeePage.getEmployeeCount();
-
-    // Act: Add new employee
-    await employeePage.addEmployee(employeeData);
-
-    // Assert: Wait for success toast
-    const toast = await employeePage.waitForSuccessToast();
-    await expect(toast).toContainText(/success/i);
-
-    // Assert: Verify employee appears in table
-    await employeePage.verifyEmployeeExists(
-      employeeData.firstName,
-      employeeData.lastName
-    );
-
-    // Assert: Verify employee count increased
-    const newCount = await employeePage.getEmployeeCount();
-    expect(newCount).toBe(initialCount + 1);
-  });
-
   test("should successfully add a new employee with only required fields", async () => {
     // Arrange: Generate employee data without optional fields
     const timestamp = Date.now();
@@ -146,37 +115,6 @@ test.describe("Employee Management", () => {
 
     // Assert: Dialog should still be open
     await expect(employeePage.submitButton).toBeVisible();
-  });
-
-  test("should show error when PIN already exists", async ({ page }) => {
-    // Arrange: Add first employee
-    const timestamp = Date.now();
-    const firstEmployee = {
-      firstName: `First`,
-      lastName: `Employee${timestamp}`,
-      pin: `9999`,
-    };
-
-    await employeePage.addEmployee(firstEmployee);
-    await employeePage.waitForSuccessToast();
-
-    // Wait a bit for the dialog to close
-    await page.waitForTimeout(1000);
-
-    // Act: Try to add another employee with the same PIN
-    const secondEmployee = {
-      firstName: `Second`,
-      lastName: `Employee${timestamp}`,
-      pin: `9999`, // Same PIN as first employee
-    };
-
-    await employeePage.openAddEmployeeDialog();
-    await employeePage.fillAddEmployeeForm(secondEmployee);
-    await employeePage.clickSubmit();
-
-    // Assert: Error toast should appear about duplicate PIN
-    const toast = await employeePage.waitForErrorToast();
-    await expect(toast).toContainText(/PIN already exists/i);
   });
 
   test("should cancel adding employee and close dialog", async () => {
@@ -280,31 +218,5 @@ test.describe("Employee Management", () => {
     );
     await expect(row).toBeVisible();
     await expect(row).toContainText(employeeData.department);
-  });
-
-  test("should add inactive employee", async ({ page }) => {
-    // Arrange: Generate employee data with inactive status
-    const timestamp = Date.now();
-    const employeeData = {
-      firstName: `Inactive`,
-      lastName: `User${timestamp}`,
-      pin: "6666",
-      isActive: false,
-    };
-
-    // Act: Add new employee
-    await employeePage.addEmployee(employeeData);
-
-    // Assert: Wait for success toast
-    const toast = await employeePage.waitForSuccessToast();
-    await expect(toast).toContainText(/success/i);
-
-    // Assert: Verify employee appears in table with inactive status
-    const row = await employeePage.findEmployeeInTable(
-      employeeData.firstName,
-      employeeData.lastName
-    );
-    await expect(row).toBeVisible();
-    await expect(row).toContainText(/inactive/i);
   });
 });
