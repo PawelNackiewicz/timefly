@@ -19,6 +19,37 @@ TimeFly is a time tracking application that simplifies the process of recording 
 - **Deployment**:
   - Vercel - Platform for frontend deployment, optimized for Astro
 
+## Live Environments
+
+TimeFly is deployed on two environments:
+
+- **Production**: [http://prod-timefly.vercel.app/](http://prod-timefly.vercel.app/)
+- **Test/Preview**: [https://prev-timefly.vercel.app/](https://prev-timefly.vercel.app/)
+
+### How to Use the System
+
+#### Employee Clock-In/Clock-Out (Test Environment)
+
+On the test environment, you can access the employee clock-in/clock-out interface without logging in:
+
+1. Navigate to [https://prev-timefly.vercel.app/clock](https://prev-timefly.vercel.app/clock)
+2. This view allows employees to start and end their work shifts using their PIN
+3. No authentication is required for this view
+
+#### Admin Access
+
+To access the administrative dashboard with full management capabilities:
+
+1. Navigate to the login page at [https://prev-timefly.vercel.app/login](https://prev-timefly.vercel.app/login)
+2. Use the following credentials:
+   - **Email**: public@user.com
+   - **Password**: P@ssword1!
+3. Once logged in, you'll have access to:
+   - Employee management
+   - Time tracking reports
+   - Dashboard with KPIs
+   - Manual time entry corrections
+
 ## Getting Started Locally
 
 To get started with TimeFly locally, follow these steps:
