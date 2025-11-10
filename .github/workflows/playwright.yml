@@ -1,9 +1,10 @@
 name: E2E Tests
 on:
   schedule:
-    - cron: "0 2 * * *" # Codziennie o 2:00 UTC
+    - cron: "0 2 * * *"
   push:
     branches: [main]
+  workflow_dispatch:
 jobs:
   test:
     timeout-minutes: 60
